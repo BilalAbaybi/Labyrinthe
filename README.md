@@ -16,6 +16,7 @@ Assurez-vous d'avoir l'arborescence suivante pour que le jeu fonctionne :
 - `footer.php` : Pied de page commun (contient les scripts et fermetures).
 - `styles.css` : Feuille de style (Design Thème sombre).
 - `labyrinthe.db` : Base de données SQLite contenant les couloirs et passages.
+- -`favicon.ico` : Logo du bts SIO.
 - `/img` : Dossier des images (`depart.jpg`, `couloir.jpg`, `cle.jpg`, `sortie.jpg`).
 - `/sons` : Dossier des bruitages (`cle.mp3`, `mur.mp3`, `grille.mp3`, `victoire.mp3`).
 
