@@ -1,18 +1,9 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Labyrinthe Bilal ABAYBI</title>
-</head>
-<body>
-    <?php include 'header.php'; ?>
-
-    <?php
+<?php
     // =============================================
     // 1. Initialisation de la session et des variables
     // =============================================
     session_start(); // Démarre la session pour stocker les données du joueur
+    include 'header.php';
     $bdd_fichier = 'labyrinthe.db'; // Fichier de la base de données SQLite
     $depart = 'depart'; // Type du couloir de départ
 
@@ -22,6 +13,8 @@
         $_SESSION['cles'] = [];
         $_SESSION['cles_ramassees'] = [];
         $_SESSION['grilles_ouvertes'] = [];
+        $_SESSION['historique'] = []; // On vide l'historique quand on recommence
+        unset($_SESSION['last_couloir']);
         header('Location: ?'); // Recharge la page sans paramètre
         exit;
     }
@@ -32,14 +25,18 @@
         $_SESSION['cles'] = [];
         $_SESSION['cles_ramassees'] = [];
         $_SESSION['grilles_ouvertes'] = [];
+        unset($_SESSION['last_couloir']);
     }
 
     // --- Initialisation des variables de session si besoin ---
     if (!isset($_SESSION['deplacements'])) $_SESSION['deplacements'] = 0; // Initialise le score
     if (!isset($_SESSION['cles'])) $_SESSION['cles'] = [];
-    if (!isset($_SESSION['cles_ramassees'])) $_SESSION['cles_ouvertes'] = [];
+    if (!isset($_SESSION['cles_ramassees'])) $_SESSION['cles_ramassees'] = [];
     if (!isset($_SESSION['grilles_ouvertes'])) $_SESSION['grilles_ouvertes'] = [];
+    if (!isset($_SESSION['historique'])) $_SESSION['historique'] = [];
     $message = ''; // Variable pour afficher les messages au joueur
+    $son_a_jouer = ''; // variable pour le son
+    $vient_de_ramasser = false;
 
     // =============================================
     // 2. Connexion à la base de données
@@ -70,6 +67,8 @@
             $_SESSION['cles'][] = 'clé';
             $_SESSION['cles_ramassees'][] = $couloir_courant['id'];
             $message = 'Vous avez ramassé une clé !';
+            $son_a_jouer = 'cle.mp3';
+            $vient_de_ramasser = true;
         }
 
         // --- Contrôle du déplacement ---
@@ -84,30 +83,61 @@
         $passage_info = $result_verif->fetchArray(SQLITE3_ASSOC);
 
         if ($passage_info !== false) {
+            // --- CAS 1 : Le chemin existe (C'est valide) ---
             $passage_id = $passage_info['rowid'];
+            
             if ($passage_info['type'] === 'grille') {
                 // Si la grille est déjà ouverte, on peut passer
                 if (in_array($passage_id, $_SESSION['grilles_ouvertes'])) {
-                    $_SESSION['deplacements'] += 1; // Incrémente le score
+                    $_SESSION['deplacements'] += 1;
+                    $_SESSION['last_couloir'] = $id_courant; // VALIDATION DU DÉPLACEMENT
                 }
                 // Sinon, il faut une clé pour ouvrir
                 else if (count($_SESSION['cles']) > 0) {
-                    array_pop($_SESSION['cles']); // On utilise une clé
-                    $_SESSION['deplacements'] += 1; // Incrémente le score
+                    array_pop($_SESSION['cles']); 
+                    $_SESSION['deplacements'] += 1;
                     $_SESSION['grilles_ouvertes'][] = $passage_id;
                     $message = 'Vous avez utilisé une clé pour passer la grille.';
+                    $son_a_jouer = 'grille.mp3';
+                    $_SESSION['last_couloir'] = $id_courant; // VALIDATION DU DÉPLACEMENT
                 }
                 // Sinon, déplacement bloqué
                 else {
                     $id_courant = $id_depart;
                     $message = 'Grille bloquée : vous n\'avez pas de clé.';
+                    $son_a_jouer = 'mur.mp3';
+                    // Pas de mise à jour de last_couloir ici
                 }
             } else {
                 // Passage libre
-                $_SESSION['deplacements'] += 1; // Incrémente le score
+                $_SESSION['deplacements'] += 1;
+                $_SESSION['last_couloir'] = $id_courant; // VALIDATION DU DÉPLACEMENT
+            }
+        } else {
+            // --- CAS 2 : Le chemin N'EXISTE PAS (Anti-Triche) ---
+            $id_courant = $id_depart; // On force le retour en arrière
+            $message = "🚫 Déplacement impossible ! Téléportation interdite.";
+            $son_a_jouer = 'mur.mp3';
+
+            // IMPORTANT : On recharge les infos du couloir précédent pour l'affichage
+            $sql_courant = 'SELECT id, type FROM couloir WHERE id = :id';
+            $req_courant = $sqlite->prepare($sql_courant);
+            $req_courant->bindValue(':id', $id_courant, SQLITE3_INTEGER);
+            $res_courant = $req_courant->execute();
+            $couloir_courant = $res_courant->fetchArray(SQLITE3_ASSOC);
+        }
+
+        // --- Mise à jour de l'historique ---
+        if ($couloir_courant) {
+            if (empty($_SESSION['historique']) || end($_SESSION['historique']) !== $couloir_courant['id']) {
+                $_SESSION['historique'][] = $couloir_courant['id'];
             }
         }
-        $_SESSION['last_couloir'] = $id_courant; // On mémorise le dernier couloir visité
+
+        // --- Vérification Victoire ---
+        if ($couloir_courant && $couloir_courant['type'] === 'sortie') {
+            $son_a_jouer = 'victoire.mp3';
+        }
     }
 
     // --- Si aucun couloir courant, on prend le départ ---
@@ -137,11 +167,17 @@
     }
     ?>
 
-    <!-- =============================================
-         5. Affichage des infos de jeu
-         ============================================= -->
+    <?php if ($son_a_jouer): ?>
+    <audio autoplay>
+        <source src="sons/<?php echo $son_a_jouer; ?>" type="audio/mpeg">
+    </audio>
+    <?php endif; ?>
+
     <p>👣 Score (déplacements) : <?php echo $_SESSION['deplacements']; ?></p>
     <p>🔑 Clés dans l’inventaire : <?php echo count($_SESSION['cles']); ?></p>
+    <p>🔊 N'oubliez pas d'activer le son </p>
+    <hr>
+    <p>📜 Parcours : <?php echo implode(' 👉 ', $_SESSION['historique']); ?></p>
 
     <?php
     // --- Affiche les messages ---
@@ -162,7 +198,7 @@
 
     <?php
     // =============================================
-    // 6. Affichage du couloir courant et des passages
+    // 6. Affichage du couloir courant et des passages ainsi que les images
     // =============================================
     if ($couloir_courant) {
         echo "<h1>Vous êtes actuellement dans le couloir " . htmlspecialchars($couloir_courant['id']) . "</h1>";
@@ -203,9 +239,24 @@
             echo "</ul>";
         }
     }
+    // Choix de l'image selon le type de salle
+    $image = 'couloir.jpg'; // Image par défaut (couloir vide)
+    if ($couloir_courant['type'] === 'depart') {
+        $image = 'depart.jpg';
+    } 
+    elseif ($couloir_courant['type'] === 'sortie') {
+        $image = 'sortie.jpg';
+    } 
+    elseif ($couloir_courant['type'] === 'cle') {
+    // Si la clé est encore là (pas dans l'inventaire), on affiche l'image avec la clé
+    if ($vient_de_ramasser || !in_array($couloir_courant['id'], $_SESSION['cles_ramassees'])) 
+    {$image = 'cle.jpg';}
+    }
+    
     $sqlite->close(); // On ferme la connexion à la base de données
     ?>
 
+    <div>
+        <img src="img/<?php echo $image; ?>" alt="Lieu actuel" class="img-jeu">
+    </div>
     <?php include 'footer.php'; ?>
-</body>
-</html>

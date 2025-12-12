@@ -1,0 +1,157 @@
+/* =========================================
+   1. AMBIANCE GÉNÉRALE (Dark Mode)
+   ========================================= */
+body {
+    background-color: #1e1e1e; /* Fond gris très foncé */
+    color: #f0f0f0;            /* Texte blanc cassé (plus doux pour les yeux) */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police moderne */
+    margin: 0;
+    padding: 0;
+    text-align: center; /* Centre tout le texte par défaut */
+    line-height: 1.6;
+}
+
+/* Conteneur principal pour éviter que le texte ne soit trop large */
+body > div, body > p, body > ul, body > h1, body > h2, body > h3 {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 15px;
+}
+
+/* =========================================
+   2. TYPOGRAPHIE & TITRES
+   ========================================= */
+h1 {
+    color: #f1c40f; /* Jaune Or */
+    text-transform: uppercase;
+    letter-spacing: 1px; /* Espacement des lettres un peu réduit */
+    border-bottom: 2px solid #f1c40f;
+    display: inline-block;
+    padding-bottom: 5px; /* Moins d'espace sous le titre */
+    margin-top: 20px;    /* Moins d'espace au-dessus */
+    font-size: 1.4em;    /* <--- C'est ici qu'on réduit la taille du titre ! */
+}
+
+h2 {
+    color: #3498db;
+    font-size: 1.2em; /* Réduit aussi un peu les sous-titres */
+}
+
+h3 {
+    color: #bdc3c7;
+    margin-top: 20px;
+    font-size: 1em;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(241, 196, 15, 0.75), rgba(0, 0, 0, 0));
+    margin: 20px 0; /* Lignes de séparation plus discrètes */
+}
+/* =========================================
+   3. NAVIGATION (Menu du haut)
+   ========================================= */
+header {
+    background-color: #111; /* Fond noir pour l'en-tête */
+    padding: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 15px;
+    font-size: 1.1em;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+nav a:hover {
+    background-color: #333; /* Gris foncé au survol */
+    color: #f1c40f;
+}
+
+/* =========================================
+   4. LISTE DES COULOIRS
+   ========================================= */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background-color: #2c3e50;
+    margin: 8px auto; /* "auto" permet de centrer le bouton si on réduit sa largeur */
+    padding: 8px;     /* <--- Boutons plus fins (avant c'était 15px) */
+    border-radius: 6px;
+    box-shadow: 0 3px 0 #1a252f; /* Ombre un peu plus petite */
+    transition: transform 0.1s;
+    max-width: 500px; /* <--- Empêche les boutons d'être trop larges sur PC */
+}
+
+li:hover {
+    transform: translateX(3px);
+    background-color: #34495e;
+}
+
+/* Les liens dans la liste */
+li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    font-size: 0.9em; /* <--- Texte des boutons un peu plus petit */
+}
+
+li a:hover {
+    color: #f1c40f;
+}
+/* =========================================
+   5. IMAGES
+   ========================================= */
+.img-jeu {
+    width: 100%;             /* S'adapte sur mobile */
+    max-width: 450px;        /* TAILLE MAXIMALE (Ici on réduit !) */
+    height: auto;            /* Garde les proportions */
+    border: 4px solid #fff;  /* Cadre blanc */
+    border-radius: 15px;     /* Coins bien arrondis */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5); /* Ombre portée */
+    transition: transform 0.3s;
+    display: block;
+    margin: 0 auto;          /* Centre l'image horizontalement */
+}
+
+.img-jeu:hover {
+    transform: scale(1.05);  /* Zoom léger au survol */
+    border-color: #f1c40f;   /* Le cadre devient jaune au survol */
+}
+
+/* =========================================
+   6. BOUTONS SPECIAUX & FOOTER
+   ========================================= */
+.btn-top {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 20px;
+}
+
+.btn-top:hover {
+    background-color: #c0392b;
+}
+
+footer {
+    margin-top: 50px;
+    padding: 20px;
+    font-size: 0.8em;
+    color: #7f8c8d;
+    border-top: 1px solid #333;
+}

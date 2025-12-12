@@ -2,31 +2,48 @@
 # Projet BTS SIO 1 - LYCEE FULBERT
 
 **Date de création :** 14/11/2025
+**Dernière mise à jour :** 12/12/2025
 
-## Description
-Labyrinthe interactif où le joueur doit trouver la sortie en se déplaçant dans des couloirs,
-ramassant des clés et en résolvant des défis pour progresser.
-Le jeu propose une interface simple et agréable, avec un suivi des déplacements et un inventaire pour les clés collectées.
+## 📝 Description
+Labyrinthe interactif web développé en PHP/SQLite. Le joueur doit trouver la sortie en se déplaçant dans des couloirs, en ramassant des clés et en ouvrant des grilles.
+Le jeu propose désormais une expérience immersive grâce à une ambiance visuelle (Dark Mode), des illustrations dynamiques et des effets sonores.
 
-## Comment jouer
-- Déplacez-vous dans le labyrinthe cliquant sur les couloirs.
-- Ramassez les clés pour débloquer certaines zones.
-- Atteignez la sortie pour gagner et recevez un message de victoire.
-- Vous pouvez recommencer une nouvelle partie à tout moment avec le bouton dédié.
+## 📂 Structure du projet
+Assurez-vous d'avoir l'arborescence suivante pour que le jeu fonctionne :
+- `index.php` : Moteur principal du jeu.
+- `regles.php` : Page explicative des règles.
+- `header.php` : En-tête commun (contient le menu et l'inclusion CSS).
+- `footer.php` : Pied de page commun (contient les scripts et fermetures).
+- `styles.css` : Feuille de style (Design Thème sombre).
+- `labyrinthe.db` : Base de données SQLite contenant les couloirs et passages.
+- `/img` : Dossier des images (`depart.jpg`, `couloir.jpg`, `cle.jpg`, `sortie.jpg`).
+- `/sons` : Dossier des bruitages (`cle.mp3`, `mur.mp3`, `grille.mp3`, `victoire.mp3`).
 
-## Fonctionnalités principales
-- Déplacement libre dans les couloirs adjacents
-- Compteur de déplacements pour suivre votre progression
-- Inventaire pour les objets collectés (clés)
-- Bouton "Nouvelle partie" pour recommencer
-- Messages de victoire lorsque la sortie est atteinte
-- Page dédiée aux règles du jeu pour mieux comprendre les mécaniques
-- Améliorations esthétiques et optimisation de l'expérience utilisateur
+## 🎮 Comment jouer
+- **Déplacez-vous** dans le labyrinthe en cliquant sur les boutons de direction.
+- **Ramassez les clés** 🗝️ automatiquement en entrant dans les pièces spéciales.
+- **Ouvrez les grilles** 🔓 : Si vous avez une clé, la grille s'ouvrira automatiquement au passage.
 
-## Historique des modifications
-- **14/11/2025** : Création du projet  
-- **21/11/2025** : Ajout du déplacement dans les couloirs, compteur, bouton nouvelle partie, inventaire et message de victoire  
-- **28/11/2025** : Ajout des règles du jeu sur une autre page, améliorations esthétiques, réorganisation du code et optimisation de l'UX
+## ✨ Fonctionnalités principales
+- **Gameplay** : Déplacement libre, gestion de l'inventaire et compteur de pas.
+- **Immersion** :
+    - Images contextuelles (l'image change si on a ramassé la clé).
+    - Bruitages sonores (ouverture de porte, mur bloqué, victoire).
+    - Interface "Dark Mode" moderne et responsive.
+- **Ergonomie** : Historique du parcours affiché en bas de page.
+- **Sécurité** : Système anti-triche empêchant la modification manuelle de l'URL (`$_GET`).
+- **Gestion de partie** : Bouton de réinitialisation complète (score, inventaire et position).
 
-## Auteur
+## 📅 Historique des modifications
+- **14/11/2025** : Création du projet et de la structure de base.
+- **21/11/2025** : Implémentation du moteur de déplacement, du compteur de score, de l'inventaire et de la condition de victoire.
+- **28/11/2025** : Création de la page `regles.php`, premières améliorations esthétiques et réorganisation du code.
+- **12/12/2025** : Mise à jour majeure "Immersion & Sécurité" :
+    - **Refonte graphique** : Ajout de `styles.css` (Design sombre type "Donjon", boutons stylisés).
+    - **Médias** : Intégration d'images dynamiques selon l'état de la salle et ajout de bruitages.
+    - **UX** : Ajout de l'historique de navigation.
+    - **Sécurité** : Correction de la faille de téléportation (anti-cheat via URL).
+    - **Code** : Nettoyage complet, factorisation et correction de bugs.
+
+## 👤 Auteur
 Bilal ABAYBI

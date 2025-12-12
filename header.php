@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Labyrinthe Bilal ABAYBI</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Lien vers une feuille de style -->
+    <link rel="stylesheet" href="styles.css"> 
 </head>
 <body>
     <header>

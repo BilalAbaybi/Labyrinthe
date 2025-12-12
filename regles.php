@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Règles du jeu</title>
-</head>
-<body>
 <?php include 'header.php'; ?>
+
 <h1>📜 Règles du jeu : Labyrinthe Web</h1>
 
 <p>
@@ -126,11 +119,9 @@
     Quand tu es prêt, retourne à l’accueil et commence une partie :
 </p>
 <p>
-    <a href="index.php?new=partie">⬅️ Retour à l’accueil</a>
+    <a href="index.php?new=partie">⬅️ Commencez une nouvelle partie</a>
 </p>
 
 <button onclick="window.scrollTo(0, 0);" class="btn-top">⬆️ Retour en haut</button>
-<?php include 'footer.php'; ?>
 
-</body>
-</html>
+<?php include 'footer.php'; ?>
